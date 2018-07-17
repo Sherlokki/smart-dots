@@ -1,3 +1,4 @@
+
 Population test;
 PVector goal  = new PVector(400, 20);
 ArrayList<Obstacle> obstacles = new ArrayList();

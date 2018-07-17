@@ -52,7 +52,7 @@ class Dot {
 
   //-------------------------------------------------------------------------------------------------------------------
   //calls the move function and check for collisions and stuff
-  void update(ArrayList obstacles) {
+  void update(Obstacle[] obstacles) {
       if (!dead && !reachedGoal) {
         move();
         if (pos.x< 2|| pos.y<2 || pos.x>width-2 || pos.y>height -2) {//if near the edges of the window then kill it 
@@ -60,12 +60,12 @@ class Dot {
         } else if (dist(pos.x, pos.y, goal.x, goal.y) < 5) {//if reached goal
           reachedGoal = true;
         }
+        for (Obstacle obstacle : obstacles) {
+          if (dist(pos.x, pos.y, obstacle.getXLocation(), obstacle.getYLocation()) < 22) {//if ball obstacle
+              dead = true;
+          }
+        }
       }
-    for (Obstacle obstacle : (ArrayList<Obstacle>) obstacles) {
-      if (dist(pos.x, pos.y, obstacle.getXLocation(), obstacle.getYLocation()) < 22) {//if ball obstacle
-          dead = true;
-      }
-    }
   }
 
 
@@ -74,13 +74,10 @@ class Dot {
   void calculateFitness() {
     if (reachedGoal) {//if the dot reached the goal then the fitness is based on the amount of steps it took to get there
       fitness = 1.0/16.0 + 10000.0/(float)(brain.step * brain.step);
-      println("fitness: "+fitness);
     } else {//if the dot didn't reach the goal then the fitness is based on how close it is to the goal
       float distanceToGoal = dist(pos.x, pos.y, goal.x, goal.y);
-      if (dead) {
-        distanceToGoal = distanceToGoal * 10;
-      }
-      fitness = 1.0/(distanceToGoal * distanceToGoal);
+      // lower heavily fitness of those who fail to reach goal
+      fitness = 1.0/(distanceToGoal * distanceToGoal * distanceToGoal);
     }
   }
 

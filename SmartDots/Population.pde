@@ -151,7 +151,7 @@ class Population {
         if (dots[bestDot].reachedGoal) {
         minStep = dots[bestDot].brain.step;
         println("step:", minStep);
-        println("gen: " + gen + " / id:" + id);
+        println("gen: " + gen + " / id: " + id);
         println("reachedGoal:", reachedGoalDots);
         }
     }

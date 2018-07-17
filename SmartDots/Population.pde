@@ -31,9 +31,10 @@ class Population {
 
   //-------------------------------------------------------------------------------------------------------------------------------
   //update all dots 
-  void update(ArrayList obstacles) {
+  void update(Obstacle[] obstacles) {
     for (int i = 0; i< dots.length; i++) {
-      if (dots[i].brain.step > minStep) {//if the dot has already taken more steps than the best dot has taken to reach the goal
+      if (dots[i].brain.step > minStep + 100) {//if the dot has already taken more steps than the best dot has taken to reach the goal
+        // give extra 100 steps before killing every dot
         dots[i].dead = true;//then it dead
       } else {
         dots[i].update(obstacles);
@@ -52,7 +53,7 @@ class Population {
 
   //------------------------------------------------------------------------------------------------------------------------------------
   //returns whether all the dots are either dead or have reached the goal
-  boolean allDotsDead(ArrayList obstacles) {
+  boolean allDotsDead(Obstacle[] obstacles) {
     for (int i = 0; i< dots.length; i++) {
       if (!dots[i].dead && !dots[i].reachedGoal) { 
         return false;
@@ -60,7 +61,7 @@ class Population {
     }
 
     // reset obstacles
-    for (Obstacle obstacle : (ArrayList<Obstacle>) obstacles) {
+    for (Obstacle obstacle : obstacles) {
       obstacle.setup();
     }
     return true;
@@ -139,14 +140,14 @@ class Population {
   void setBestDot() {
     float max = 0;
     int maxIndex = 0;
-    int deadDots = 0;
+    int reachedGoalDots = 0;
     for (int i = 0; i< dots.length; i++) {
       if (dots[i].fitness > max) {
         max = dots[i].fitness;
         maxIndex = i;
       }
-      if (dots[i].dead) {
-        deadDots++;
+      if (dots[i].reachedGoal) {
+        reachedGoalDots++;
       }
     }
 
@@ -157,7 +158,7 @@ class Population {
       minStep = dots[bestDot].brain.step;
       println("step:", minStep);
       println("gen:", gen);
-      println("deadDots:", deadDots);
+      println("reachedGoal:", reachedGoalDots);
     }
   }
 }
